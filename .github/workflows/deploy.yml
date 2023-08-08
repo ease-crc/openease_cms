@@ -2,23 +2,21 @@ name: Deploy CMS
 
 on: workflow_dispatch
 
-env:
-  SSH_USER: ${{ secrets.SSH_USER }}
-  SSH_HOST: ${{ secrets.SSH_HOST }}
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: configure ssh
         env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        run: | 
+        run: |
           mkdir -p ~/.ssh
           echo "$SSH_KEY" > ~/.ssh/deploy.key
           chmod 600 ~/.ssh/deploy.key
           cat >>~/.ssh/config <<END
-          Host staging
+          Host deploy
             HostName $SSH_HOST
             User $SSH_USER
             IdentityFile ~/.ssh/deploy.key
@@ -31,10 +29,11 @@ jobs:
       - name: copy compose file to deployment server
         env:
           COMPOSE_DEST_DIR: ${{ secrets.COMPOSE_DEST_DIR }}
-        run: rsync -av docker-compose.yml $SSH_USER@$SSH_HOST:$COMPOSE_DEST_DIR
+        run: rsync -av docker-compose.yml deploy:$COMPOSE_DEST_DIR
 
       - name: launch docker-compose
         env:
+          WEBSITE_URL: ${{ secrets.WEBSITE_URL }}
           POSTGRES_DB_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_DB_PW: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB_NAME: ${{ secrets.POSTGRES_DB }}
@@ -45,5 +44,4 @@ jobs:
           GITLAB_CLIENT_ID: ${{ secrets.GITLAB_CLIENT_ID }}
           GITLAB_CLIENT_SECRET: ${{ secrets.GITLAB_CLIENT_SECRET }}
           GITLAB_DEFAULT_ROLE_ID: ${{ secrets.GITLAB_DEFAULT_ROLE_ID }}
-          WEBSITE_URL: ${{ secrets.WEBSITE_URL }}
-        run: docker-compose -H "ssh://$SSH_USER@SSH_HOST" up -d
+        run: docker-compose -H "ssh://deploy" up -d
