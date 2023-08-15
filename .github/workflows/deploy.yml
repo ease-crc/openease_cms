@@ -26,11 +26,6 @@ jobs:
       - name: check out repository code
         uses: actions/checkout@v3
 
-      - name: copy compose file to deployment server
-        env:
-          COMPOSE_DEST_DIR: ${{ secrets.COMPOSE_DEST_DIR }}
-        run: rsync -av docker-compose.yml deploy:$COMPOSE_DEST_DIR
-
       - name: launch docker-compose
         env:
           WEBSITE_URL: ${{ secrets.WEBSITE_URL }}
