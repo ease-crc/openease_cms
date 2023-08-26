@@ -77,13 +77,17 @@ services:
       ADMIN_PASSWORD: '${DIRECTUS_ADMIN_PW}'
 
       AUTH_PROVIDERS: 'gitlab'
-
+      
       AUTH_GITLAB_DRIVER: 'openid'
       AUTH_GITLAB_ICON: 'gitlab'
-      AUTH_GITLAB_LABEL: 'NeemGit'
+      AUTH_GITLAB_LABEL: '${GITLAB_INSTANCE_NAME}'
+      AUTH_GITLAB_SCOPE: 'openid profile email'
+      AUTH_GITLAB_AUTHORIZE_URL: '${GITLAB_INSTANCE_URL}/oauth/authorize'
+      AUTH_GITLAB_ACCESS_URL: '${GITLAB_INSTANCE_URL}/oauth/token'
+      AUTH_GITLAB_PROFILE_URL: '${GITLAB_INSTANCE_URL}/oauth/userinfo'
       AUTH_GITLAB_CLIENT_ID: '${GITLAB_CLIENT_ID}'
       AUTH_GITLAB_CLIENT_SECRET: '${GITLAB_CLIENT_SECRET}'
-      AUTH_GITLAB_ISSUER_URL: 'https://gitlab.com/.well-known/openid-configuration'
+      AUTH_GITLAB_ISSUER_URL: '${GITLAB_INSTANCE_URL}/.well-known/openid-configuration'
       AUTH_GITLAB_IDENTIFIER_KEY: 'email'
       AUTH_GITLAB_ALLOW_PUBLIC_REGISTRATION: 'true'
       AUTH_GITLAB_DEFAULT_ROLE_ID: '${GITLAB_DEFAULT_ROLE_ID}'

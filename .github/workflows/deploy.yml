@@ -45,6 +45,8 @@ jobs:
           DIRECTUS_SECRET: ${{ secrets.DIRECTUS_SECRET }}
           DIRECTUS_ADMIN_EMAIL: ${{ secrets.DIRECTUS_ADMIN_EMAIL }}
           DIRECTUS_ADMIN_PW: ${{ secrets.DIRECTUS_ADMIN_PASSWORD }}
+          GITLAB_INSTANCE_NAME: ${{ secrets.GITLAB_INSTANCE_NAME }}
+          GITLAB_INSTANCE_URL: ${{ secrets.GITLAB_INSTANCE_URL }}
           GITLAB_CLIENT_ID: ${{ secrets.GITLAB_CLIENT_ID }}
           GITLAB_CLIENT_SECRET: ${{ secrets.GITLAB_CLIENT_SECRET }}
           GITLAB_DEFAULT_ROLE_ID: ${{ secrets.GITLAB_DEFAULT_ROLE_ID }}
