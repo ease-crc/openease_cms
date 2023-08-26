@@ -1,6 +1,14 @@
 name: Deploy CMS
 
-on: workflow_dispatch
+on: 
+  workflow_dispatch:
+    inputs:
+      test_deploy:
+        type: choice
+        description: 'Test Deploy'
+        options:
+          - true
+          - false
 
 jobs:
   deploy:
@@ -28,6 +36,7 @@ jobs:
 
       - name: launch docker-compose
         env:
+          TEST_DEPLOY: ${{ inputs.test_deploy }}
           WEBSITE_URL: ${{ secrets.WEBSITE_URL }}
           POSTGRES_DB_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_DB_PW: ${{ secrets.POSTGRES_PASSWORD }}

@@ -11,7 +11,7 @@ services:
       TZ: 'Europe/Berlin'
       URL: '${WEBSITE_URL}'
       VALIDATION: 'http'
-      STAGING: 'false'  # set to true in testing/development
+      STAGING: '${TEST_DEPLOY}' # set to true in testing/development
     ports:
       - 443:443
       - 80:80
