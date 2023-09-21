@@ -34,7 +34,7 @@ services:
       # - ./extensions:/directus/extensions
     networks:
       - directus
-      # Only needed if running both openease and cms locally
+      # Only needed if running both openease and CMS locally
       - cms-development-network
     depends_on:
       - cache
@@ -78,7 +78,7 @@ services:
 
 networks:
   directus:
-  # only needed if running both openease and cms locally
+  # Only needed if running both openease and CMS locally
   cms-development-network:
     external: true
 
