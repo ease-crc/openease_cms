@@ -92,7 +92,7 @@ services:
       AUTH_GITLAB_ALLOW_PUBLIC_REGISTRATION: 'true'
       AUTH_GITLAB_DEFAULT_ROLE_ID: '${GITLAB_DEFAULT_ROLE_ID}'
 
-      PUBLIC_URL: 'https://localhost:8055/'
+      PUBLIC_URL: '${WEBSITE_URL}:8055/'
 
 networks:
   directus:
