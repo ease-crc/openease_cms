@@ -1,0 +1,56 @@
+name: Re-Deploy CMS
+
+on: 
+  workflow_dispatch:
+    inputs:
+      test_deploy:
+        type: choice
+        description: 'Test Deploy'
+        options:
+          - true
+          - false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: configure ssh
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/deploy.key
+          chmod 600 ~/.ssh/deploy.key
+          cat >>~/.ssh/config <<END
+          Host deploy
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/deploy.key
+            StrictHostKeyChecking no
+          END
+
+      - name: check out repository code
+        uses: actions/checkout@v3
+
+      - name: shut-down docker-compose
+        run: docker-compose -H "ssh://deploy" down
+
+      - name: launch docker-compose
+        env:
+          TEST_DEPLOY: ${{ inputs.test_deploy }}
+          WEBSITE_URL: ${{ secrets.WEBSITE_URL }}
+          POSTGRES_DB_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_DB_PW: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB_NAME: ${{ secrets.POSTGRES_DB }}
+          DIRECTUS_KEY: ${{ secrets.DIRECTUS_KEY }}
+          DIRECTUS_SECRET: ${{ secrets.DIRECTUS_SECRET }}
+          DIRECTUS_ADMIN_EMAIL: ${{ secrets.DIRECTUS_ADMIN_EMAIL }}
+          DIRECTUS_ADMIN_PW: ${{ secrets.DIRECTUS_ADMIN_PASSWORD }}
+          GITLAB_INSTANCE_NAME: ${{ secrets.GITLAB_INSTANCE_NAME }}
+          GITLAB_INSTANCE_URL: ${{ secrets.GITLAB_INSTANCE_URL }}
+          GITLAB_CLIENT_ID: ${{ secrets.GITLAB_CLIENT_ID }}
+          GITLAB_CLIENT_SECRET: ${{ secrets.GITLAB_CLIENT_SECRET }}
+          GITLAB_DEFAULT_ROLE_ID: ${{ secrets.GITLAB_DEFAULT_ROLE_ID }}
+        run: docker-compose -H "ssh://deploy" up -d
