@@ -24,6 +24,7 @@ services:
   database:
     container_name: database
     image: postgis/postgis:13-master
+    restart: unless-stopped
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
@@ -36,6 +37,7 @@ services:
   cache:
     container_name: cache
     image: redis:6
+    restart: unless-stopped
     networks:
       - directus
 
@@ -44,6 +46,7 @@ services:
     image: directus/directus:9.22
     ports:
       - 8055:8055
+    restart: unless-stopped
     volumes:
       # By default, uploads are stored in /directus/uploads
       # Always make sure your volumes matches the storage root when using
